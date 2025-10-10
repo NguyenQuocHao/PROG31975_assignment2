@@ -12,30 +12,32 @@ struct ListView: View {
                 .padding(.bottom, 20)
                 .bold()
 
-            // Column titles
-            HStack {
-                Text("Size").frame(maxWidth: .infinity)
-                Text("Topping").frame(maxWidth: .infinity)
-                Text("Crust").frame(maxWidth: .infinity)
-                Text("Quantity").frame(maxWidth: .infinity)
-            }
-            .font(.title3)
-            .padding(.bottom, 5)
-            .bold()
-
-            // Column data
-            ForEach(list, id: \.self) { item in
+            VStack {
+                // Column titles
                 HStack {
-                    Text(item.size.rawValue).frame(maxWidth: .infinity)
-                    Text(item.toppings.rawValue).frame(maxWidth: .infinity)
-                    Text(item.crust.rawValue).frame(maxWidth: .infinity)
-                    Text("\(item.quantity)").frame(maxWidth: .infinity).bold()
+                    Text("Size").frame(maxWidth: .infinity)
+                    Text("Topping").frame(maxWidth: .infinity)
+                    Text("Crust").frame(maxWidth: .infinity)
+                    Text("Quantity").frame(maxWidth: .infinity)
+                }
+                .bold()
+
+                // Column data
+                ForEach(list, id: \.self) { item in
+                    HStack {
+                        Text(item.size.rawValue).frame(maxWidth: .infinity)
+                        Text(item.toppings.rawValue).frame(maxWidth: .infinity)
+                        Text(item.crust.rawValue).frame(maxWidth: .infinity)
+                        Text("\(item.quantity)").frame(maxWidth: .infinity).bold()
+                    }
                 }
             }
+            .padding()
+            .background(Color.yellow.clipShape(.rect(cornerRadius: 5)))
 
             Spacer()
         }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)  // Fills all available space
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
         .padding()
         .background(Color.orange)
     }

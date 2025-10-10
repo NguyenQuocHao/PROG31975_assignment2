@@ -57,9 +57,10 @@ struct ContentView: View {
 
                 NavigationLink(destination: ListView(list: $list)) {
                     Text("Show My Order")
-                        .frame(maxWidth: .infinity)
+                        .foregroundStyle(Color.white)
                         .padding()
-                        .background(.orange)
+                        .background(Color.blue.clipShape(.rect(cornerRadius: 15)))
+
                 }
             }
             .background(.orange)
