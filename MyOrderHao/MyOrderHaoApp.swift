@@ -1,9 +1,4 @@
-//
-//  MyOrderHaoApp.swift
-//  MyOrderHao
-//
-//  Created by user275773 on 10/10/25.
-//
+// Code by Hao Nguyen, 991521091
 
 import SwiftUI
 

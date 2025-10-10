@@ -1,9 +1,4 @@
-//
-//  Order.swift
-//  MyOrderHao
-//
-//  Created by user275773 on 10/10/25.
-//
+// Code by Hao Nguyen, 991521091
 
 enum PizzaSize: String, CaseIterable {
     case small = "Small"
@@ -20,9 +15,9 @@ enum ToppingOption: String, CaseIterable {
 }
 
 enum CrustType: String, CaseIterable {
-    case thin
-    case regular
-    case thick
+    case thin = "Thin"
+    case regular = "Regular"
+    case thick = "Thick"
 }
 
 struct Order: Hashable {
