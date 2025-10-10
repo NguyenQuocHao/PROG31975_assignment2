@@ -6,17 +6,17 @@
 //
 
 enum PizzaSize: String, CaseIterable {
-    case small
-    case medium
-    case large
+    case small = "Small"
+    case medium = "Medium"
+    case large = "Large"
 }
 
 enum ToppingOption: String, CaseIterable {
-    case none
-    case cheese
-    case pepperoni
-    case veggie
-    case meatLovers
+    case none = "None"
+    case cheese = "Cheese"
+    case pepperoni = "Pepperoni"
+    case veggie = "Veggie"
+    case meatLovers = "Meat Lovers"
 }
 
 enum CrustType: String, CaseIterable {
