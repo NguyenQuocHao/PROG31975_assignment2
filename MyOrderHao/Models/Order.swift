@@ -1,6 +1,6 @@
+import Foundation
 // Code by Hao Nguyen, 991521091
 import SwiftData
-import Foundation
 
 enum PizzaSize: String, CaseIterable, Codable {
     case small = "Small"
@@ -31,16 +31,26 @@ class Order: Hashable {
     var crust: CrustType
     var quantity: Int = 0
     var creationDate: Date
-    
-    init(size: PizzaSize, toppings: ToppingOption, crust: CrustType, quantity: Int) {
+
+    init(
+        size: PizzaSize,
+        toppings: ToppingOption,
+        crust: CrustType,
+        quantity: Int
+    ) {
         self.size = size
         self.toppings = toppings
         self.crust = crust
         self.quantity = quantity
         self.creationDate = Date()
     }
-    
+
     static func getDefault() -> Order {
-        return Order(size: .medium, toppings: .none, crust: .regular, quantity: 1)
+        return Order(
+            size: .medium,
+            toppings: .none,
+            crust: .regular,
+            quantity: 1
+        )
     }
 }

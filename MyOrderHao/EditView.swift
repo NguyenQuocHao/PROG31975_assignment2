@@ -1,15 +1,17 @@
 // Code by Hao Nguyen, 991521091
 
-import SwiftUI
 import SwiftData
+import SwiftUI
 
 struct EditView: View {
     var order: Order = Order.getDefault()
     @Environment(\.modelContext) var context
-    @Query(sort : \Order.id) var orders : [Order]
+    @Query(sort: \Order.id) var orders: [Order]
     @State var tempOrder = Order.getDefault()
     @State var shouldNavigate = false
-    
+    @State var showUpdateAlert = false
+    @State var showAlert = false
+
     var body: some View {
         NavigationStack {
             VStack(spacing: 20) {
@@ -19,75 +21,104 @@ struct EditView: View {
                     .foregroundStyle(.white)
                     .padding(.top, 30)
                     .bold()
-                
+
                 Text("Order: \(order.id)")
-                
-                VStack(spacing: 10) {
+
+                VStack(spacing: 0) {
                     Form {
-                        Picker("Select a size", selection: Binding(
-                            get: { order.size },
-                            set: { order.size = $0 }
-                        )) {
+                        Picker(
+                            "Select a size",
+                            selection: Binding(
+                                get: { order.size },
+                                set: { order.size = $0 }
+                            )
+                        ) {
                             ForEach(PizzaSize.allCases, id: \.self) { option in
                                 Text(option.rawValue).tag(option)
                             }
                         }
-                        
-                        Picker("Select a topping", selection: Binding(
-                            get: { order.toppings },
-                            set: { order.toppings = $0 }
-                        )) {
-                            ForEach(ToppingOption.allCases, id: \.self) { option in
+
+                        Picker(
+                            "Select a topping",
+                            selection: Binding(
+                                get: { order.toppings },
+                                set: { order.toppings = $0 }
+                            )
+                        ) {
+                            ForEach(ToppingOption.allCases, id: \.self) {
+                                option in
                                 Text(option.rawValue).tag(option)
                             }
                         }
-                        
+
                         Text("Select crust")
-                        Picker("Select crust", selection: Binding(
-                            get: { order.crust },
-                            set: { order.crust = $0 }
-                        )) {
+                        Picker(
+                            "",
+                            selection: Binding(
+                                get: { order.crust },
+                                set: { order.crust = $0 }
+                            )
+                        ) {
                             ForEach(CrustType.allCases, id: \.self) { option in
                                 Text(option.rawValue).tag(option)
                             }
                         }
                         .pickerStyle(.segmented)
-                        
-                        Stepper("Select number: \(order.quantity)", value: Binding(
-                            get: { order.quantity },
-                            set: { order.quantity = $0 }
-                        ), in: 1...100)
-                        
+
+                        Stepper(
+                            "Select number: \(order.quantity)",
+                            value: Binding(
+                                get: { order.quantity },
+                                set: { order.quantity = $0 }
+                            ),
+                            in: 1...100
+                        )
+
                         Button("Update") {
-                            do{
+                            do {
                                 try context.save()
                                 print("saved")
+                                showUpdateAlert = true
                             } catch {
                                 print("error")
                             }
                         }
                         .frame(maxWidth: .infinity, alignment: .center)
-                        
-                        Button("Delete") {
-                            do{
-                                context.delete(order)
-                                
-                                try context.save()
-                                print("saved")
-                                
-                                shouldNavigate = true
-                            } catch {
-                                print("error")
-                            }
+                        .alert(isPresented: $showUpdateAlert) {
+                            Alert(
+                                title: Text("Successfully updated"),
+                            )
                         }
-                        .frame(maxWidth: .infinity, alignment: .center).foregroundColor(.red)
+
+                        Button("Delete") {
+                            showAlert = true
+                        }
+                        .frame(maxWidth: .infinity, alignment: .center)
+                        .foregroundColor(.red)
+                        .alert(isPresented: $showAlert) {
+                            Alert(
+                                title: Text(
+                                    "Do you really want to delete this order?"
+                                ),
+                                primaryButton: .default(
+                                    Text("Cancel"),
+                                ),
+                                secondaryButton: .destructive(
+                                    Text("Delete"),
+                                    action: delete
+                                )
+                            )
+                        }
                     }
                     .scrollContentBackground(.hidden)
                     .background(.orange)
                 }
-                
+                Text(
+                    "Order date: \(order.creationDate.formatted(date: .abbreviated, time: .standard))"
+                )
+
                 Spacer()
-                
+
                 NavigationLink(
                     destination: ListView(),
                     isActive: $shouldNavigate,
@@ -99,17 +130,21 @@ struct EditView: View {
             .background(Color.orange.ignoresSafeArea())
         }
     }
-    
-    func delete( indexSet:  IndexSet) {
-        for index in indexSet {
-            let t = orders[index]
-            context.delete(t)
-            
-            try? context.save()
+
+    func delete() {
+        do {
+            context.delete(order)
+
+            try context.save()
+            print("saved")
+
+            shouldNavigate = true
+        } catch {
+            print("error")
         }
     }
 }
-    
+
 #Preview {
     ContentView()
 }

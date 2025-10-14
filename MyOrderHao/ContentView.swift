@@ -1,13 +1,13 @@
 // Code by Hao Nguyen, 991521091
 
-import SwiftUI
 import SwiftData
+import SwiftUI
 
 struct ContentView: View {
     @State var order: Order = Order.getDefault()
     @Environment(\.modelContext) var context
-    @Query(sort : \Order.id) var orders : [Order]
-    
+    @Query(sort: \Order.id) var orders: [Order]
+
     var body: some View {
         NavigationStack {
             VStack(spacing: 20) {
@@ -17,7 +17,7 @@ struct ContentView: View {
                     .foregroundStyle(.white)
                     .padding(.top, 30)
                     .bold()
-                
+
                 VStack(spacing: 10) {
                     Form {
                         Picker("Select a size", selection: $order.size) {
@@ -25,73 +25,69 @@ struct ContentView: View {
                                 Text(option.rawValue).tag(option)
                             }
                         }
-                        
+
                         Picker("Select a topping", selection: $order.toppings) {
-                            ForEach(ToppingOption.allCases, id: \.self) { option in
+                            ForEach(ToppingOption.allCases, id: \.self) {
+                                option in
                                 Text(option.rawValue).tag(option)
                             }
                         }
-                        
+
                         Text("Select crust")
-                        Picker(selection: $order.crust, label: Text("Select crust")) {
+                        Picker("", selection: $order.crust) {
                             ForEach(CrustType.allCases, id: \.self) { option in
                                 Text(option.rawValue).tag(option)
                             }
                         }
                         .pickerStyle(.segmented)
-                        
-                        Stepper("Select number: \(order.quantity)", value: $order.quantity, in: 1...100)
-                        
+
+                        Stepper(
+                            "Select number: \(order.quantity)",
+                            value: $order.quantity,
+                            in: 1...100
+                        )
+
                         Button("Add to list") {
                             context.insert(order)
-                            do{
+                            do {
                                 try context.save()
                                 print("saved")
                             } catch {
                                 print("error")
                             }
-                            
+
                             order = Order.getDefault()
-                            
-                            
                         }
                         .frame(maxWidth: .infinity, alignment: .center)
                     }
                     .scrollContentBackground(.hidden)
                     .background(.orange)
-                    
+
                     Text("Number of orders: \(orders.count)")
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 5)
                         .background(.orange)
                         .bold()
                 }
-                
+
                 Spacer()
-                
+
                 // Navigation button
                 NavigationLink(destination: ListView()) {
                     Text("Show My Order")
                         .foregroundStyle(Color.white)
                         .padding()
-                        .background(Color.blue.clipShape(.rect(cornerRadius: 15)))
+                        .background(
+                            Color.blue.clipShape(.rect(cornerRadius: 15))
+                        )
                 }
             }
             .padding(.horizontal)
             .background(Color.orange.ignoresSafeArea())
         }
     }
-    
-    func delete( indexSet:  IndexSet) {
-        for index in indexSet {
-            let t = orders[index]
-            context.delete(t)
-            
-            try? context.save()
-        }
-    }
 }
-    
+
 #Preview {
     ContentView()
 }
