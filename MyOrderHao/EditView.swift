@@ -3,10 +3,12 @@
 import SwiftUI
 import SwiftData
 
-struct ContentView: View {
-    @State var order: Order = Order.getDefault()
+struct EditView: View {
+    var order: Order = Order.getDefault()
     @Environment(\.modelContext) var context
     @Query(sort : \Order.id) var orders : [Order]
+    @State var tempOrder = Order.getDefault()
+    @State var shouldNavigate = false
     
     var body: some View {
         NavigationStack {
@@ -18,64 +20,80 @@ struct ContentView: View {
                     .padding(.top, 30)
                     .bold()
                 
+                Text("Order: \(order.id)")
+                
                 VStack(spacing: 10) {
                     Form {
-                        Picker("Select a size", selection: $order.size) {
+                        Picker("Select a size", selection: Binding(
+                            get: { order.size },
+                            set: { order.size = $0 }
+                        )) {
                             ForEach(PizzaSize.allCases, id: \.self) { option in
                                 Text(option.rawValue).tag(option)
                             }
                         }
                         
-                        Picker("Select a topping", selection: $order.toppings) {
+                        Picker("Select a topping", selection: Binding(
+                            get: { order.toppings },
+                            set: { order.toppings = $0 }
+                        )) {
                             ForEach(ToppingOption.allCases, id: \.self) { option in
                                 Text(option.rawValue).tag(option)
                             }
                         }
                         
                         Text("Select crust")
-                        Picker(selection: $order.crust, label: Text("Select crust")) {
+                        Picker("Select crust", selection: Binding(
+                            get: { order.crust },
+                            set: { order.crust = $0 }
+                        )) {
                             ForEach(CrustType.allCases, id: \.self) { option in
                                 Text(option.rawValue).tag(option)
                             }
                         }
                         .pickerStyle(.segmented)
                         
-                        Stepper("Select number: \(order.quantity)", value: $order.quantity, in: 1...100)
+                        Stepper("Select number: \(order.quantity)", value: Binding(
+                            get: { order.quantity },
+                            set: { order.quantity = $0 }
+                        ), in: 1...100)
                         
-                        Button("Add to list") {
-                            context.insert(order)
+                        Button("Update") {
                             do{
                                 try context.save()
                                 print("saved")
                             } catch {
                                 print("error")
                             }
-                            
-                            order = Order.getDefault()
-                            
-                            
                         }
                         .frame(maxWidth: .infinity, alignment: .center)
+                        
+                        Button("Delete") {
+                            do{
+                                context.delete(order)
+                                
+                                try context.save()
+                                print("saved")
+                                
+                                shouldNavigate = true
+                            } catch {
+                                print("error")
+                            }
+                        }
+                        .frame(maxWidth: .infinity, alignment: .center).foregroundColor(.red)
                     }
                     .scrollContentBackground(.hidden)
                     .background(.orange)
-                    
-                    Text("Number of orders: \(orders.count)")
-                        .frame(maxWidth: .infinity)
-                        .padding(.vertical, 5)
-                        .background(.orange)
-                        .bold()
                 }
                 
                 Spacer()
                 
-                // Navigation button
-                NavigationLink(destination: ListView()) {
-                    Text("Show My Order")
-                        .foregroundStyle(Color.white)
-                        .padding()
-                        .background(Color.blue.clipShape(.rect(cornerRadius: 15)))
-                }
+                NavigationLink(
+                    destination: ListView(),
+                    isActive: $shouldNavigate,
+                    label: { EmptyView() }
+                )
+                .hidden()
             }
             .padding(.horizontal)
             .background(Color.orange.ignoresSafeArea())
