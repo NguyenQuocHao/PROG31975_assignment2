@@ -47,7 +47,7 @@ struct ContentView: View {
                             in: 1...100
                         )
 
-                        Button("Add to list") {
+                        Button("Save Order") {
                             context.insert(order)
                             do {
                                 try context.save()

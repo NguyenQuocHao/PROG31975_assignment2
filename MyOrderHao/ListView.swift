@@ -4,7 +4,7 @@ import SwiftData
 import SwiftUI
 
 struct ListView: View {
-    @Query(sort: \Order.id) var orders: [Order]
+    @Query(sort: \Order.orderDate, order: .reverse) var orders: [Order]
     let formatter = DateFormatter()
 
     var body: some View {
@@ -51,7 +51,7 @@ struct ListView: View {
                                     maxWidth: .infinity
                                 ).bold()
                                 Text(
-                                    "\(item.creationDate.formatted(date: .numeric, time: .shortened))"
+                                    "\(item.orderDate.formatted(date: .numeric, time: .shortened))"
                                 ).frame(maxWidth: .infinity)
                             }
                         }

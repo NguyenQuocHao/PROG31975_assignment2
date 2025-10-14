@@ -23,6 +23,7 @@ struct EditView: View {
                     .bold()
 
                 Text("Order: \(order.id)")
+                    .bold()
 
                 VStack(spacing: 0) {
                     Form {
@@ -114,7 +115,7 @@ struct EditView: View {
                     .background(.orange)
                 }
                 Text(
-                    "Order date: \(order.creationDate.formatted(date: .abbreviated, time: .standard))"
+                    "Order Date: \(order.orderDate.formatted(date: .abbreviated, time: .standard))"
                 )
 
                 Spacer()

@@ -30,7 +30,7 @@ class Order: Hashable {
     var toppings: ToppingOption
     var crust: CrustType
     var quantity: Int = 0
-    var creationDate: Date
+    var orderDate: Date
 
     init(
         size: PizzaSize,
@@ -42,7 +42,7 @@ class Order: Hashable {
         self.toppings = toppings
         self.crust = crust
         self.quantity = quantity
-        self.creationDate = Date()
+        self.orderDate = Date()
     }
 
     static func getDefault() -> Order {
