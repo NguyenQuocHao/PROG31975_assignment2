@@ -38,6 +38,7 @@ struct EditView: View {
                                 Text(option.rawValue).tag(option)
                             }
                         }
+                        .disabled(true)
 
                         Picker(
                             "Select a topping",
@@ -51,6 +52,7 @@ struct EditView: View {
                                 Text(option.rawValue).tag(option)
                             }
                         }
+                        .disabled(true)
 
                         Text("Select crust")
                         Picker(
@@ -65,6 +67,7 @@ struct EditView: View {
                             }
                         }
                         .pickerStyle(.segmented)
+                        .disabled(true)
 
                         Stepper(
                             "Select number: \(order.quantity)",
