@@ -34,6 +34,10 @@ struct ListView: View {
                     }
                     .bold()
 
+                    if orders.count == 0 {
+                        Text("You have 0 order.").padding(.top, 10)
+                    }
+
                     // Column data
                     ForEach(orders.indices, id: \.self) { index in
                         NavigationLink(
