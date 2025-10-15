@@ -6,7 +6,6 @@ import SwiftUI
 struct EditView: View {
     var order: Order = Order.getDefault()
     @Environment(\.modelContext) var context
-    @Query(sort: \Order.id) var orders: [Order]
     @State var shouldNavigate = false
     @State var showUpdateAlert = false
     @State var showDeleteAlert = false
