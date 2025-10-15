@@ -23,6 +23,7 @@ struct EditView: View {
 
                 Text("Order: \(order.id)")
                     .bold()
+                    .padding(.top, 10)
 
                 VStack(spacing: 0) {
                     Form {

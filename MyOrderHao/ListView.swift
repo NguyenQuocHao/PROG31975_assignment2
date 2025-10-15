@@ -5,7 +5,6 @@ import SwiftUI
 
 struct ListView: View {
     @Query(sort: \Order.orderDate, order: .reverse) var orders: [Order]
-    let formatter = DateFormatter()
 
     var body: some View {
         NavigationStack {
@@ -59,6 +58,7 @@ struct ListView: View {
                                 Text(
                                     "\(orders[index].orderDate.formatted(date: .numeric, time: .shortened))"
                                 ).frame(maxWidth: .infinity)
+                                    .padding(5)
                             }
                         }.background(
                             index == 1

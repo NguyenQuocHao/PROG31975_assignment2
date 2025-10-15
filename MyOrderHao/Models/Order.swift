@@ -3,26 +3,6 @@
 import SwiftData
 import Foundation
 
-enum PizzaSize: String, CaseIterable, Codable {
-    case small = "Small"
-    case medium = "Medium"
-    case large = "Large"
-}
-
-enum ToppingOption: String, CaseIterable, Codable {
-    case none = "None"
-    case cheese = "Cheese"
-    case pepperoni = "Pepperoni"
-    case veggie = "Veggie"
-    case meatLovers = "Meat Lovers"
-}
-
-enum CrustType: String, CaseIterable, Codable {
-    case thin = "Thin"
-    case regular = "Regular"
-    case thick = "Thick"
-}
-
 @Model
 class Order: Hashable {
     @Attribute(.unique)
