@@ -74,7 +74,7 @@ struct ContentView: View {
 
                 // Navigation button
                 NavigationLink(destination: ListView()) {
-                    Text("Show My Order")
+                    Text("Show My Order\(orders.count > 1 ? "s" : "")")
                         .foregroundStyle(Color.white)
                         .padding()
                         .background(
