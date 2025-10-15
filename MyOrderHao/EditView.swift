@@ -7,10 +7,9 @@ struct EditView: View {
     var order: Order = Order.getDefault()
     @Environment(\.modelContext) var context
     @Query(sort: \Order.id) var orders: [Order]
-    @State var tempOrder = Order.getDefault()
     @State var shouldNavigate = false
     @State var showUpdateAlert = false
-    @State var showAlert = false
+    @State var showDeleteAlert = false
 
     var body: some View {
         NavigationStack {
@@ -95,11 +94,11 @@ struct EditView: View {
                         }
 
                         Button("Delete") {
-                            showAlert = true
+                            showDeleteAlert = true
                         }
                         .frame(maxWidth: .infinity, alignment: .center)
                         .foregroundColor(.red)
-                        .alert(isPresented: $showAlert) {
+                        .alert(isPresented: $showDeleteAlert) {
                             Alert(
                                 title: Text(
                                     "Do you really want to delete this order?"
