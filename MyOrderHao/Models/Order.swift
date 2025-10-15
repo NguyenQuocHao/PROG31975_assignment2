@@ -1,6 +1,7 @@
-import Foundation
 // Code by Hao Nguyen, 991521091
+
 import SwiftData
+import Foundation
 
 enum PizzaSize: String, CaseIterable, Codable {
     case small = "Small"

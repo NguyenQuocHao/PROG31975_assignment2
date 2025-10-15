@@ -17,7 +17,7 @@ struct ListView: View {
                     .foregroundStyle(.white)
                     .padding(.bottom, 30)
                     .bold()
-                
+
                 Text("Total of orders: \(orders.count)")
                     .font(.title2)
                     .padding(.bottom, 20)
@@ -35,27 +35,33 @@ struct ListView: View {
                     .bold()
 
                     // Column data
-                    ForEach(orders, id: \.self) { item in
-                        NavigationLink(destination: EditView(order: item)) {
+                    ForEach(orders.indices, id: \.self) { index in
+                        NavigationLink(
+                            destination: EditView(order: orders[index])
+                        ) {
                             HStack {
-                                Text(item.size.rawValue).frame(
+                                Text(orders[index].size.rawValue).frame(
                                     maxWidth: .infinity
                                 )
-                                Text(item.toppings.rawValue).frame(
+                                Text(orders[index].toppings.rawValue).frame(
                                     maxWidth: .infinity
                                 )
-                                Text(item.crust.rawValue).frame(
+                                Text(orders[index].crust.rawValue).frame(
                                     maxWidth: .infinity
                                 )
-                                Text("\(item.quantity)").frame(
+                                Text("\(orders[index].quantity)").frame(
                                     maxWidth: .infinity
                                 ).bold()
                                 Text(
-                                    "\(item.orderDate.formatted(date: .numeric, time: .shortened))"
+                                    "\(orders[index].orderDate.formatted(date: .numeric, time: .shortened))"
                                 ).frame(maxWidth: .infinity)
                             }
-                        }
-                    }
+                        }.background(
+                            index == 1
+                                ? Color.gray.opacity(0)
+                                : Color.gray.opacity(0.2)
+                        )
+                    }.cornerRadius(5)
                 }
                 .padding()
                 .background(Color.yellow.clipShape(.rect(cornerRadius: 5)))
