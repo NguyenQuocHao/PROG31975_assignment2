@@ -80,10 +80,10 @@ struct EditView: View {
                         Button("Update") {
                             do {
                                 try context.save()
-                                print("saved")
+                                print("Order \(order.id) updated")
                                 showUpdateAlert = true
                             } catch {
-                                print("error")
+                                print("Can't update order \(order.id): \(error)")
                             }
                         }
                         .frame(maxWidth: .infinity, alignment: .center)
@@ -139,11 +139,11 @@ struct EditView: View {
             context.delete(order)
 
             try context.save()
-            print("saved")
+            print("Order \(order.id) deleted")
 
             shouldNavigate = true
         } catch {
-            print("error")
+            print("Can't delete order: \(error)")
         }
     }
 }

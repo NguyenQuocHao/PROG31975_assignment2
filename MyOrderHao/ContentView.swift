@@ -101,9 +101,9 @@ struct ContentView: View {
         context.insert(order)
         do {
             try context.save()
-            print("saved")
+            print("New order saved")
         } catch {
-            print("error")
+            print("Can't save new order: \(error)")
         }
 
         order = Order.getDefault()
