@@ -7,6 +7,7 @@ struct ContentView: View {
     @State var order: Order = Order.getDefault()
     @Environment(\.modelContext) var context
     @Query(sort: \Order.id) var orders: [Order]
+    @State var showConfirm = false
 
     var body: some View {
         NavigationStack {
@@ -48,20 +49,29 @@ struct ContentView: View {
                         )
 
                         Button("Save Order") {
-                            context.insert(order)
-                            do {
-                                try context.save()
-                                print("saved")
-                            } catch {
-                                print("error")
-                            }
-
-                            order = Order.getDefault()
+                            showConfirm = true
                         }
                         .frame(maxWidth: .infinity, alignment: .center)
                     }
                     .scrollContentBackground(.hidden)
                     .background(.orange)
+                    .alert(isPresented: $showConfirm) {
+                        Alert(
+                            title: Text(
+                                "Confirm"
+                            ),
+                            message: Text(
+                                "Size: \(order.size.rawValue)\nCrust: \(order.crust.rawValue)\nToppings: \(order.toppings.rawValue)\nQuantity: \(order.quantity)"
+                            ),
+                            primaryButton: .default(
+                                Text("Cancel"),
+                            ),
+                            secondaryButton: .default(
+                                Text("OK"),
+                                action: save
+                            )
+                        )
+                    }
 
                     Text("Number of orders: \(orders.count)")
                         .frame(maxWidth: .infinity)
@@ -85,6 +95,18 @@ struct ContentView: View {
             .padding(.horizontal)
             .background(Color.orange.ignoresSafeArea())
         }
+    }
+
+    func save() {
+        context.insert(order)
+        do {
+            try context.save()
+            print("saved")
+        } catch {
+            print("error")
+        }
+
+        order = Order.getDefault()
     }
 }
 
