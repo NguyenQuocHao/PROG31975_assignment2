@@ -5,10 +5,19 @@ import SwiftUI
 
 struct ListView: View {
     @Query(sort: \Order.orderDate, order: .reverse) var orders: [Order]
+    @State var showAddView = false
 
     var body: some View {
         NavigationStack {
-
+            // Hide Back button and add link to Add view
+            NavigationLink(destination: ContentView(), isActive: $showAddView) {
+                EmptyView()
+            }
+            .navigationBarBackButtonHidden(true)
+            .navigationBarItems(trailing: Button("Add Order") {
+                showAddView = true
+            })
+            
             VStack {
                 // Brand name
                 Text("PIZZA WOOH!!")
@@ -21,7 +30,7 @@ struct ListView: View {
                     .font(.title2)
                     .padding(.bottom, 20)
                     .bold()
-
+                
                 VStack {
                     // Column titles
                     HStack {
