@@ -4,8 +4,9 @@ import SwiftData
 import SwiftUI
 
 struct ListView: View {
-    @Query(sort: \Order.orderDate, order: .reverse) var orders: [Order]
     @State var showAddView = false
+    @Environment(\.modelContext) var context
+    @Query(sort: \Order.orderDate, order: .reverse) var orders: [Order]
 
     var body: some View {
         NavigationStack {
@@ -14,10 +15,12 @@ struct ListView: View {
                 EmptyView()
             }
             .navigationBarBackButtonHidden(true)
-            .navigationBarItems(trailing: Button("Add Order") {
-                showAddView = true
-            })
-            
+            .navigationBarItems(
+                trailing: Button("Add Order") {
+                    showAddView = true
+                }
+            )
+
             VStack {
                 // Brand name
                 Text("PIZZA WOOH!!")
@@ -30,7 +33,7 @@ struct ListView: View {
                     .font(.title2)
                     .padding(.bottom, 20)
                     .bold()
-                
+
                 VStack {
                     // Column titles
                     HStack {
@@ -46,35 +49,40 @@ struct ListView: View {
                         Text("You have 0 order.").padding(.top, 10)
                     }
 
-                    // Column data
-                    ForEach(orders.indices, id: \.self) { index in
-                        NavigationLink(
-                            destination: EditView(order: orders[index])
-                        ) {
-                            HStack {
-                                Text(orders[index].size.rawValue).frame(
-                                    maxWidth: .infinity
-                                )
-                                Text(orders[index].toppings.rawValue).frame(
-                                    maxWidth: .infinity
-                                )
-                                Text(orders[index].crust.rawValue).frame(
-                                    maxWidth: .infinity
-                                )
-                                Text("\(orders[index].quantity)").frame(
-                                    maxWidth: .infinity
-                                ).bold()
-                                Text(
-                                    "\(orders[index].orderDate.formatted(date: .numeric, time: .shortened))"
-                                ).frame(maxWidth: .infinity)
-                                    .padding(5)
+                    List {
+                        // Column data
+                        ForEach(orders.indices, id: \.self) { index in
+                            NavigationLink(
+                                destination: EditView(order: orders[index])
+                            ) {
+                                HStack {
+                                    Text(orders[index].size.rawValue).frame(
+                                        maxWidth: .infinity
+                                    )
+                                    Text(orders[index].toppings.rawValue).frame(
+                                        maxWidth: .infinity
+                                    )
+                                    Text(orders[index].crust.rawValue).frame(
+                                        maxWidth: .infinity
+                                    )
+                                    Text("\(orders[index].quantity)").frame(
+                                        maxWidth: .infinity
+                                    ).bold()
+                                    Text(
+                                        "\(orders[index].orderDate.formatted(date: .numeric, time: .shortened))"
+                                    ).frame(maxWidth: .infinity)
+                                }
                             }
-                        }.background(
-                            index == 1
-                                ? Color.gray.opacity(0)
-                                : Color.gray.opacity(0.2)
-                        )
-                    }.cornerRadius(5)
+                            .listRowBackground(
+                                index == 1
+                                    ? Color.gray.opacity(0).clipShape(.rect(cornerRadius: 5))
+                                    : Color.gray.opacity(0.2).clipShape(.rect(cornerRadius: 5))
+                            )
+                        }
+                        .onDelete(perform: deleteItem)
+                        .cornerRadius(5)
+                    }
+                    .listStyle(.plain)
                 }
                 .padding()
                 .background(Color.yellow.clipShape(.rect(cornerRadius: 5)))
@@ -84,6 +92,19 @@ struct ListView: View {
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .padding()
             .background(Color.orange)
+        }
+    }
+
+    private func deleteItem(at offsets: IndexSet) {
+        for index in offsets {
+            let order = orders[index]
+            context.delete(order)
+            print("Order \(order.id) deleted")
+        }
+        do {
+            try context.save()
+        } catch {
+            print("Can't delete order: \(error)")
         }
     }
 }
